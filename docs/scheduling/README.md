@@ -85,17 +85,85 @@ priority inheritance mechanism.
 
 ## 4. Experimental Evidence
 
-The original laboratory work includes:
+The following diagrams document the scheduling behaviour,
+thread interactions and priority inheritance mechanisms
+investigated during the RTEMS laboratory experiments.
 
-- POSIX thread state diagram
-- Thread interaction sequence diagram
-- RTEMS scheduling Gantt diagram
-- GDB debugging transcript
-- RTEMS Capture Engine execution trace
-- Complete academic laboratory report
+### 4.1 POSIX Thread State Diagram
 
-Selected diagrams and supporting documentation
-will be added to this directory.
+![POSIX Thread State Diagram](Zustandsgraph_psx_example_3.png)
+
+The diagram illustrates the state transitions of the
+two POSIX threads in the `psx_example_3` application.
+
+The analysis focuses on:
+
+- Thread creation and activation
+- Transitions between ready and running states
+- Blocking through `pthread_cond_timedwait()`
+- Resuming execution after a timeout
+- Thread termination
+
+The state model was developed through source-code
+analysis and verified against the observed execution
+behaviour under RTEMS.
+
+### 4.2 POSIX Thread Sequence Diagram
+
+![POSIX Thread Sequence Diagram](sequence_diagram_psx_example_3.png)
+
+The sequence diagram reconstructs the interaction
+between the main execution context and two child threads.
+
+Under priority-based `SCHED_FIFO` scheduling:
+
+1. The main thread creates `child1`.
+2. `child1` begins executing with the highest priority.
+3. `child1` blocks while waiting for a condition-variable timeout.
+4. The main thread continues and creates `child2`.
+5. `child2` executes and terminates.
+6. Following the timeout, `child1` resumes execution.
+7. The main thread uses `pthread_join()` to wait for termination.
+
+The sequence was investigated using GDB breakpoints,
+backtraces and thread inspection in QEMU.
+
+### 4.3 Priority Inheritance — Scheduling Gantt Diagram
+
+![RTEMS Scheduling Gantt Diagram](P5_Gantt_Diagram.png)
+
+The Gantt diagram illustrates the scheduling behaviour
+of three tasks in the RTEMS Capture Engine example.
+
+The tasks have different priorities:
+
+- `CT1a`: Priority 102 — initially holds the mutex.
+- `CT1b`: Priority 101 — intermediate-priority task.
+- `CT1c`: Priority 100 — highest-priority task.
+
+When `CT1c` attempts to acquire the mutex held by
+`CT1a`, it becomes blocked.
+
+The RTEMS priority-inheritance mechanism temporarily
+raises the effective priority of `CT1a` from 102 to 100.
+
+This allows the mutex owner to execute and release
+the shared resource, enabling the blocked higher-priority
+task to continue.
+
+The behaviour was reconstructed from RTEMS Capture Engine
+execution traces.
+
+### Experimental Scope
+
+These diagrams document the analysis of existing
+RTEMS example applications.
+
+They demonstrate scheduling behaviour, thread
+synchronisation and priority inheritance.
+
+They do not constitute a formal verification of
+real-time deadlines or worst-case execution times.
 
 ## 5. Key Learning Outcomes
 
