@@ -25,12 +25,81 @@ The original laboratory experiments verified:
 
 ## Experimental Evidence
 
-The following evidence will be included:
+The following photographs and terminal screenshots document
+the original Raspberry Pi hardware experiments.
 
-- Hardware setup photograph
-- LEDs operating on the physical hardware
-- Default serial-console output
-- Runtime interval-change demonstration
+### 1. Raspberry Pi Hardware Setup
+
+![Raspberry Pi Hardware Setup](hardware_setup.jpg)
+
+The test environment consists of a Raspberry Pi and a
+Freenove GPIO breakout board.
+
+GPIO4 is connected to GPIO17 through a jumper wire,
+allowing falling-edge transitions to generate interrupts.
+
+GPIO18 is controlled by a separate thread that responds
+to interrupt events.
+
+### 2. GPIO Operation on Physical Hardware
+
+![GPIO LEDs](hardware_leds.JPG)
+
+The photograph shows the physical test setup with
+active GPIO indicators.
+
+The application coordinates periodic GPIO switching
+and interrupt-driven GPIO18 updates using POSIX threads
+and synchronisation mechanisms.
+
+### 3. Serial Console — Continuous Operation
+
+![Serial Console Output](terminal_default.png)
+
+The serial console displays the application's
+operational state during execution.
+
+The output includes:
+
+- System uptime
+- Current GPIO4 state
+- Number of GPIO18 toggles
+- Configured blinking interval
+
+The captured output shows operation with a blinking
+interval of approximately 999 ms.
+
+### 4. Runtime Configuration Changes
+
+![Runtime Interval Changes](terminal_multiple_changes.png)
+
+The application supports changing the blinking
+interval during execution without restarting RTEMS.
+
+The recorded experiment demonstrates changes between
+500 ms, 300 ms, 100 ms and 200 ms.
+
+The serial output confirms that the updated values
+were accepted and that GPIO18 continued responding
+to generated interrupt events.
+
+## Key Observation
+
+The original experiments demonstrate that the
+application successfully combines:
+
+- Priority-based POSIX thread scheduling
+- GPIO interrupt handling
+- Semaphore-based event signalling
+- Mutex-protected shared data
+- Runtime configuration through the serial console
+
+These results document functional behaviour on the
+original hardware setup.
+
+They do not establish measured interrupt latency,
+worst-case execution times or formal hard real-time
+deadline guarantees.
 
 ## Validation Scope
 
