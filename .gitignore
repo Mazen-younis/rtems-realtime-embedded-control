@@ -1,0 +1,45 @@
+# RTEMS and Waf build outputs
+build/
+.waf3-*/
+.waf-*/
+
+# Compiled C objects and libraries
+*.o
+*.obj
+*.a
+*.so
+
+# Compiled executables and firmware images
+*.exe
+*.elf
+*.bin
+*.img
+*.hex
+
+# Linker and debugging outputs
+*.map
+*.d
+
+# Temporary logs
+*.log
+*.tmp
+*.bak
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Python cache (RTEMS build utilities)
+__pycache__/
+*.pyc
